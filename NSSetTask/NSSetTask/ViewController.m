@@ -33,19 +33,30 @@
     for(int i = 1; i <= 100; i++) {
         [mutableArray100 addObject:[NSNumber numberWithInteger:i]];
     }
-    [mutableArray100 enumerateObjectsUsingBlock:^(NSNumber *obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        if ([obj integerValue] == 74) {
-            *stop = YES;
-        }
+    NSLog(@">Duration for Array: ");
+    [self checkDurationFor:^{
+        [mutableArray100 enumerateObjectsUsingBlock:^(NSNumber *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if ([obj integerValue] == 74) {
+                *stop = YES;
+            }
+        }];
     }];
     
     //Checking for set
+    NSLog(@">Duration for Set: ");
     NSSet *set100 = [NSSet setWithArray:mutableArray100];
-    [set100 containsObject:[NSNumber numberWithInteger:74]];
+    [self checkDurationFor:^{
+        [set100 containsObject:[NSNumber numberWithInteger:74]];
+    }];
     
     //Releasing
     [mutableArray100 release];
+}
 
+- (void)checkDurationFor:(void(^)(void))method {
+    NSDate *startTime = [NSDate date];
+    method();
+    NSLog(@"Time: %f", -[startTime timeIntervalSinceNow]);
 }
 
 - (void)didReceiveMemoryWarning {
